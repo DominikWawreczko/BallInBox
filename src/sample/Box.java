@@ -4,8 +4,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Box implements Drawable{
+
+
     public int leftUpperXParam, leftUpperYParam, height, width;
-    volatile int ballsCounter =0;
+    volatile int ballsWaitingCounter =0;
 
 
     @Override
@@ -23,21 +25,35 @@ public class Box implements Drawable{
     }
     public synchronized void input(){
 
-        try { while(ballsCounter >0) {
+        try { while(ballsWaitingCounter >0) {
             wait();
         }
         } catch (InterruptedException e) {
 
             System.out.println("Interrupted");
         }
-        ballsCounter++;
+        ballsWaitingCounter++;
 
     }
+
     public synchronized void output(){
-        System.out.println("Wychodze");
-        ballsCounter = ballsCounter -1;
+        ballsWaitingCounter = ballsWaitingCounter -1;
         notify();
+    }
 
+    public int getLeftUpperXParam() {
+        return leftUpperXParam;
+    }
 
+    public int getLeftUpperYParam() {
+        return leftUpperYParam;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }

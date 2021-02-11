@@ -54,10 +54,10 @@ public class Ball implements Runnable, Drawable, Stoppable  {
     }
 
     private void changePosition(){
-        oldX =x;
-        oldY =y;
-        x=x+dx;
-        y=y+dy;
+        oldX = x;
+        oldY = y;
+        x = x+dx;
+        y = y+dy;
     }
 
     private void actionInBox(){
@@ -72,7 +72,6 @@ public class Ball implements Runnable, Drawable, Stoppable  {
 
     @Override
     public void draw (GraphicsContext gc) {
-        //  System.out.println("test rysunku");
         gc.setFill(color);
         gc.fillOval(x-r,y-r,2*r,2*r);
     }
@@ -89,15 +88,16 @@ public class Ball implements Runnable, Drawable, Stoppable  {
 
     public Boolean isInBox(int a){
         if((a>=200)&&(a<=350)){
-        return true;}
+        return true;
+        }
         else return false;
 
     }
     public Boolean isGoingToBox(){
-        return ((isInBox(oldX)&& isInBox(oldY))==false)&&((isInBox(x)&& isInBox(y))==true);
+        return (!(isInBox(oldX) && isInBox(oldY)))&&((isInBox(x) && isInBox(y)));
     }
     public Boolean isGoingOutsideBox(){
-        return ((isInBox(oldX)&& isInBox(oldY))==true)&&((isInBox(x)&& isInBox(y))==false);
+        return ((isInBox(oldX) && isInBox(oldY)))&&(!(isInBox(x) && isInBox(y)));
     }
 
 }
