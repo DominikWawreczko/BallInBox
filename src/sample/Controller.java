@@ -51,7 +51,7 @@ public class Controller {
 
 
     public void dodajpilke(ActionEvent actionEvent) {
-       Ball b = new Ball(20,20,20,losulosu(), losulosu(),box, wybierzkolor());
+       Ball b = new Ball(losulosu(), losulosu(),box, wybierzkolor());
        bs.add(b);
        koniec.add(b);
         Thread t1 = new Thread(b);

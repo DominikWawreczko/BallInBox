@@ -4,40 +4,38 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Box implements Drawable{
-    public int koordyLewyGornyRogX, koordyLewyGornyRogY, wysokosc, szerokosc;
-    GraphicsContext gc;
-    volatile int licznikPilek=0;
+    public int leftUpperXParam, leftUpperYParam, height, width;
+    volatile int ballsCounter =0;
 
 
     @Override
     public void draw(GraphicsContext gc){
         gc.setFill(Color.BROWN);
-        gc.strokeRect(koordyLewyGornyRogX,koordyLewyGornyRogY,szerokosc,wysokosc);
+        gc.strokeRect(leftUpperXParam, leftUpperYParam, width, height);
 
     }
-    public Box(int koordyLewyGornyRogX,int koordyLewyGornyRogY,int wysokosc,int szerokosc){
-        this.koordyLewyGornyRogX=koordyLewyGornyRogX;
-        this.koordyLewyGornyRogY=koordyLewyGornyRogY;
-        this.wysokosc=wysokosc;
-        this.szerokosc=szerokosc;
+    public Box(int leftUpperXParam, int leftUpperYParam, int height, int width){
+        this.leftUpperXParam = leftUpperXParam;
+        this.leftUpperYParam = leftUpperYParam;
+        this.height = height;
+        this.width = width;
 
     }
-    public synchronized void wejscie(){
+    public synchronized void input(){
 
-        try { while(licznikPilek>0) {
-
-            System.out.println("czekam");
-
+        try { while(ballsCounter >0) {
             wait();
-
         }
-        } catch (InterruptedException e) { }
-        licznikPilek++;
+        } catch (InterruptedException e) {
+
+            System.out.println("Interrupted");
+        }
+        ballsCounter++;
 
     }
-    public synchronized void wyjscie(){
+    public synchronized void output(){
         System.out.println("Wychodze");
-        licznikPilek=licznikPilek-1;
+        ballsCounter = ballsCounter -1;
         notify();
 
 

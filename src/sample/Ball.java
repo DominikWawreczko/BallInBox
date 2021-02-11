@@ -1,71 +1,73 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Ball implements Runnable, Drawable, Stoppable  {
 
-        Color color;
-        volatile boolean running=true;//kiedy running będzie false to jest zabójca wątku
+    Color color;
+    volatile boolean running=true;
+    private final int r;
+    private volatile int x,y,dx,dy, oldX, oldY;
+    private final Box box;
 
-        private volatile int x,y,r,dx,dy,tmpx,tmpy;
-        private Box box;
+    public Ball( int dx , int dy, Box box,Color color){
 
+        this.x=20;
+        this.y=20;
+        this.r=20;
+        this.dx=dx;
+        this.dy=dy;
+        this.color=color;
+        this.box=box;
+    }
 
     @Override
     public void run() {
-        System.out.println("Wątek się zgłasza");
 
         while (running){
-
-            ruch();
-           // System.out.println("Hej");
-
-
+            movement();
         }
     }
 
     @Override
     public void stop(){
-    running=false;
+
+        running=false;
     }
 
-    public void ruch(){
+    public void movement(){
 
         try {
-            czyToSciana();
-            tmpx=x;
-            tmpy=y;
-            x=x+dx;
-            y=y+dy;
-            Thread.sleep(30);
-           // System.out.println("X: "+x+"Y:"+y);
-            //Teraz czesc od Boxa
-            if(((czyToWBoxie(tmpx)&&czyToWBoxie(tmpy))==false)&&((czyToWBoxie(x)&&czyToWBoxie(y))==true)){
-                //wejscie
-                this.box.wejscie();
-            }
-            if(((czyToWBoxie(tmpx)&&czyToWBoxie(tmpy))==true)&&((czyToWBoxie(x)&&czyToWBoxie(y))==false)){
-                //wyjscie
-                this.box.wyjscie();
-            }
-
+            moveBall();
 
         } catch (InterruptedException ex) {
             System.out.println("Interrupted");
         }
-
     }
-    public Ball(int x , int y , int r, int dx , int dy, Box box,Color color){
-        this.x=x;
-        this.y=y;
-        this.r=r;
-        this.dx=dx;
-        this.dy=dy;
-        this.color=color;
-        this.box=box;
 
+    public void moveBall() throws InterruptedException{
+        actionWhenItIsEndOfScreen();
+        changePosition();
+        Thread.sleep(30);
+        actionInBox();
+    }
+
+    private void changePosition(){
+        oldX =x;
+        oldY =y;
+        x=x+dx;
+        y=y+dy;
+    }
+
+    private void actionInBox(){
+        if(isGoingToBox()){
+            this.box.input();
+        }
+
+        if(isGoingOutsideBox()){
+            this.box.output();
+        }
     }
 
     @Override
@@ -74,7 +76,8 @@ public class Ball implements Runnable, Drawable, Stoppable  {
         gc.setFill(color);
         gc.fillOval(x-r,y-r,2*r,2*r);
     }
-    public void  czyToSciana()
+
+    public void actionWhenItIsEndOfScreen()
     {
         if(x>=512||x<=0){
             dx=-dx;
@@ -84,11 +87,17 @@ public class Ball implements Runnable, Drawable, Stoppable  {
         }
     }
 
-    public Boolean czyToWBoxie(int a){
+    public Boolean isInBox(int a){
         if((a>=200)&&(a<=350)){
         return true;}
         else return false;
 
+    }
+    public Boolean isGoingToBox(){
+        return ((isInBox(oldX)&& isInBox(oldY))==false)&&((isInBox(x)&& isInBox(y))==true);
+    }
+    public Boolean isGoingOutsideBox(){
+        return ((isInBox(oldX)&& isInBox(oldY))==true)&&((isInBox(x)&& isInBox(y))==false);
     }
 
 }
