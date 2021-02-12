@@ -8,22 +8,25 @@ public class Ball implements Runnable, Drawable, Stoppable  {
     Color color;
     volatile boolean running=true;
     private final int r;
-    private volatile int x,y,dx,dy, oldX, oldY;
+    public volatile Point position, oldPosition;
+    private volatile Speed speed;
     private final Box box;
-    private final int screenSize;
+    private final int screenSize = 512;
     /*
     WARNING program is not using RWD technics for balls border because the purpose of this program is to show Java back-end
     not how to implement interface
      */
-    public Ball( int dx , int dy, Box box,Color color){
-        screenSize =512;
-        this.x=20;
-        this.y=20;
-        this.r=20;
-        this.dx=dx;
-        this.dy=dy;
-        this.color=color;
+    public Ball( Point position, Speed speed, Box box){
+        this.r = 20;
+        this.position = position;
+        oldPosition = new Point(0,0);
+        this.speed = speed;
         this.box=box;
+        color =Color.AQUAMARINE;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     @Override
@@ -58,10 +61,11 @@ public class Ball implements Runnable, Drawable, Stoppable  {
     }
 
     private void changePosition(){
-        oldX = x;
-        oldY = y;
-        x = x+dx;
-        y = y+dy;
+        oldPosition.setX(position.getX());
+        oldPosition.setY(position.getY());
+        position.setX(position.getX() + speed.getDx());
+        position.setY(position.getY() + speed.getDy());
+
     }
 
     private void actionInBox(){
@@ -77,23 +81,29 @@ public class Ball implements Runnable, Drawable, Stoppable  {
     @Override
     public void draw (GraphicsContext gc) {
         gc.setFill(color);
-        gc.fillOval(x-r,y-r,2*r,2*r);
+        gc.fillOval(position.getX() - r, position.getY() - r,2*r,2*r);
     }
 
     public void actionWhenItIsEndOfScreen()
     {
-        if(x>=screenSize||x<=0){
-            dx=-dx;
+        if(position.getX() >= screenSize || position.getX() <=0){
+            speed.setDx(-speed.getDx());
         }
-        if(y>=screenSize||y<=0){
-            dy=-dy;
+        if(position.getY() >=screenSize || position.getY() <=0){
+            speed.setDy(-speed.getDy());
         }
     }
+
     public Boolean isGoingToBox(){
-        return (!(xIsInBox(oldX) && yIsInBox(oldY)))&&((xIsInBox(x) && yIsInBox(y)));
+        return !bothParamsAreInBox(oldPosition.getX(), oldPosition.getY()) && bothParamsAreInBox(position.getX(), position.getY());
     }
+
     public Boolean isGoingOutsideBox(){
-        return ((xIsInBox(oldX) && yIsInBox(oldY)))&&(!(xIsInBox(x) && yIsInBox(y)));
+        return bothParamsAreInBox(oldPosition.getX(), oldPosition.getY()) && !bothParamsAreInBox(position.getX(), position.getY());
+    }
+
+    public Boolean bothParamsAreInBox(int xCoord, int yCoord){
+        return xIsInBox(xCoord) && yIsInBox(yCoord);
     }
 
     public Boolean xIsInBox(int coords){
