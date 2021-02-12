@@ -6,6 +6,6 @@
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10" stylesheets="/sample/main.css">
     <Canvas fx:id = "canvas" GridPane.columnIndex="0" GridPane.rowSpan="6" width="512" height="512"
     />
-    <Button GridPane.columnIndex="1" GridPane.rowIndex="0" text="Dodaj pilke" onAction="#dodajpilke" minWidth="100"/>
-    <Button GridPane.columnIndex="1" GridPane.rowIndex="1" text="Zakoncz" onAction="#koniecDzialaniaProgramu" minWidth="100"/>
+    <Button GridPane.columnIndex="1" GridPane.rowIndex="0" text="Dodaj pilke" onAction="#addBall" minWidth="100"/>
+    <Button GridPane.columnIndex="1" GridPane.rowIndex="1" text="Zakoncz" onAction="#stopWorkingProgram" minWidth="100"/>
 </GridPane>

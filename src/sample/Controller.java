@@ -13,56 +13,41 @@ import java.lang.Math;
 
 public class Controller {
     public Canvas canvas;
-    ArrayList<Drawable>bs;
-    ArrayList<Stoppable>koniec;
-    Ball b;
+    ArrayList<Drawable> drawables;
+    ArrayList<Stoppable> end;
     Box box;
     private AnimationTimer timer;
 
     public void initialize(){
-        bs=new ArrayList<Drawable>();//nie zapomnieć !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        koniec=new ArrayList<Stoppable>();
-        box = new Box(200,200,150,150);//trzeba uzupełnić na koniec
-        bs.add(box);
-
-        //
-
-     timer = new AnimationTimer(){
+        drawables =new ArrayList<Drawable>();
+        end =new ArrayList<Stoppable>();
+        box = new Box(200,200,150,150);
+        drawables.add(box);
+        timer = new AnimationTimer(){
             @Override
             public void handle(long now) {
                 GraphicsContext gc = canvas.getGraphicsContext2D();
                 gc.clearRect(0, 0, 512, 512);
-               // b.draw(gc);
-               for(Drawable b: bs)
+               for(Drawable b: drawables)
                {
                     b.draw(gc);
               }
-
             }
 
         };
         timer.start();
-        //
+       }
 
-
-
+    public void addBall(ActionEvent actionEvent) {
+       Ball b = new Ball(new Point(20, 20),new Speed(generateRandom(), generateRandom()),box);
+       b.setColor(chooseColor());
+       drawables.add(b);
+       end.add(b);
+       Thread t1 = new Thread(b);
+       t1.start();
     }
 
-
-    public void dodajpilke(ActionEvent actionEvent) {
-       Ball b = new Ball(new Point(20, 20),new Speed(losulosu(), losulosu()),box);
-       b.setColor(wybierzkolor());
-       bs.add(b);
-       koniec.add(b);
-        Thread t1 = new Thread(b);
-        t1.start();
-       
-
-
-
-    }
-
-    public Color wybierzkolor(){
+    public Color chooseColor(){
         double s;
         s = Math.random();
         if(s<=0.3333){
@@ -73,12 +58,11 @@ public class Controller {
         } else {
             return Color.GOLD;
         }
-
     }
-    public int losulosu(){
+
+    public int generateRandom(){
         double s;
         s = Math.random();
-
         s=s*10;
         if(s>=7||s<=1){
             s=2+3*Math.random();
@@ -87,8 +71,8 @@ public class Controller {
     }
 
 
-    public void koniecDzialaniaProgramu(ActionEvent actionEvent) {
-        for(Stoppable b: koniec)
+    public void stopWorkingProgram(ActionEvent actionEvent) {
+        for(Stoppable b: end)
         {
             b.stop();
         }
