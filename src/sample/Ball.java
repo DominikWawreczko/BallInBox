@@ -10,9 +10,13 @@ public class Ball implements Runnable, Drawable, Stoppable  {
     private final int r;
     private volatile int x,y,dx,dy, oldX, oldY;
     private final Box box;
-
+    private final int screenSize;
+    /*
+    WARNING program is not using RWD technics for balls border because the purpose of this program is to show Java back-end
+    not how to implement interface
+     */
     public Ball( int dx , int dy, Box box,Color color){
-
+        screenSize =512;
         this.x=20;
         this.y=20;
         this.r=20;
@@ -78,26 +82,34 @@ public class Ball implements Runnable, Drawable, Stoppable  {
 
     public void actionWhenItIsEndOfScreen()
     {
-        if(x>=512||x<=0){
+        if(x>=screenSize||x<=0){
             dx=-dx;
         }
-        if(y>=512||y<=0){
+        if(y>=screenSize||y<=0){
             dy=-dy;
         }
     }
-
-    public Boolean isInBox(int a){
-        if((a>=200)&&(a<=350)){
-        return true;
-        }
-        else return false;
-
-    }
     public Boolean isGoingToBox(){
-        return (!(isInBox(oldX) && isInBox(oldY)))&&((isInBox(x) && isInBox(y)));
+        return (!(xIsInBox(oldX) && yIsInBox(oldY)))&&((xIsInBox(x) && yIsInBox(y)));
     }
     public Boolean isGoingOutsideBox(){
-        return ((isInBox(oldX) && isInBox(oldY)))&&(!(isInBox(x) && isInBox(y)));
+        return ((xIsInBox(oldX) && yIsInBox(oldY)))&&(!(xIsInBox(x) && yIsInBox(y)));
     }
+
+    public Boolean xIsInBox(int coords){
+        return isInBox(coords, box.getLeftUpperXParam(), box.getLeftUpperXParam()+box.getWidth());
+    }
+
+    public Boolean yIsInBox(int coords){
+        return isInBox(coords, box.getLeftUpperYParam(), box.getLeftUpperYParam()+box.getHeight());
+    }
+
+    public Boolean isInBox(int coords, double leftBound, double rightBound){
+        if((coords>= leftBound)&&(coords<= rightBound)){
+            return true;
+        }
+        else return false;
+    }
+
 
 }

@@ -23,7 +23,6 @@ public class Controller {
         bs=new ArrayList<Drawable>();//nie zapomnieć !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         koniec=new ArrayList<Stoppable>();
         box = new Box(200,200,150,150);//trzeba uzupełnić na koniec
-       // b = new Ball(20,20,20,1, 1,box, Color.AQUAMARINE);
         bs.add(box);
 
         //
